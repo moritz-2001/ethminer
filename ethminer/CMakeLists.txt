@@ -24,10 +24,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-if(NOT DEFINED ENV{ethash_DIR})
-    message(FATAL_ERROR "Before proceeding, please install the ethash v0.4.3 that is included with the source code. Then set ethash_DIR=/path/to/install/directory")
-endif()
-
 include(cmake/cable/bootstrap.cmake)
 
 include(CableBuildInfo)

@@ -30,7 +30,10 @@ endif()
 file(GLOB sources "*.cpp" )
 file(GLOB headers "*.h" "hpp" )
 
+find_package(AdaptiveCpp CONFIG REQUIRED)
+
 add_library(ethash-sycl STATIC ${sources} ${headers})
-target_link_libraries(ethash-sycl ethcore)# ethash::ethash Boost::thread)
+add_sycl_to_target(TARGET ethash-sycl SOURCES ${sources})
+target_link_libraries(ethash-sycl PUBLIC AdaptiveCpp::acpp-rt ethcore)
 include_directories(..)
 
