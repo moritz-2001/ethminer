@@ -87,17 +87,17 @@ void ethash_calculate_dag_item(uint32_t start, sycl::nd_item<1> item_ct1, uint32
     union {
         hash128_t   dag_node;
         sycl::uint2 dag_node_mem[25];
-    };
-    copy(dag_node.uint4s, d_light[node_index % d_light_size].uint4s, 4);
-    dag_node.words[0] ^= node_index;
-    SHA3_512(dag_node_mem, keccak_round_constants);
+    } x{};
+    copy(x.dag_node.uint4s, d_light[node_index % d_light_size].uint4s, 4);
+    x.dag_node.words[0] ^= node_index;
+    SHA3_512(x.dag_node_mem, keccak_round_constants);
 
     const int thread_id = item_ct1.get_local_id(0) & 3;
     auto g = item_ct1.get_sub_group();
     int const iSubGroupThreadId(g.get_local_id());
 
     for (uint32_t i = 0; i != ETHASH_DATASET_PARENTS; ++i) {
-        uint32_t parent_index = fnv(node_index ^ i, dag_node.words[i % NODE_WORDS]) % d_light_size;
+        uint32_t parent_index = fnv(node_index ^ i, x.dag_node.words[i % NODE_WORDS]) % d_light_size;
         for (uint32_t t = 0; t < 4; t++) {
             uint32_t shuffle_index = 0;
             if (item_ct1.get_sub_group().get_local_id() < 4)
@@ -182,14 +182,14 @@ void ethash_calculate_dag_item(uint32_t start, sycl::nd_item<1> item_ct1, uint32
                                              sycl::select_from_group(item_ct1.get_sub_group(), p4.w(), w1));
 
                 if (t == (thread_id & 3)) {
-                    dag_node.uint4s[w] = fnv4(dag_node.uint4s[w], s4);
+                    x.dag_node.uint4s[w] = fnv4(x.dag_node.uint4s[w], s4);
                 }
             }
         }
     }
-    SHA3_512(dag_node_mem, keccak_round_constants);
+    SHA3_512(x.dag_node_mem, keccak_round_constants);
     hash64_t *dag_nodes = (hash64_t *)d_dag;
-    copy(dag_nodes[node_index].uint4s, dag_node.uint4s, 4);
+    copy(dag_nodes[node_index].uint4s, x.dag_node.uint4s, 4);
 }
 
 void dev::eth::SYCLMiner::ethash_generate_dag(uint64_t dag_size, uint32_t gridSize, uint32_t blockSize, sycl::queue *stream)
