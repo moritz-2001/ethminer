@@ -299,7 +299,7 @@ class Farm : public FarmFace
 
     boost::asio::io_service::strand m_io_strand;
     boost::asio::deadline_timer     m_collectTimer;
-    static const int                m_collectInterval = 5000;
+    int                m_collectInterval = 5000;
 
     string m_pool_addresses;
 
