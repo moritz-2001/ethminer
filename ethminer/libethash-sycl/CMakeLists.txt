@@ -32,8 +32,10 @@ file(GLOB headers "*.h" "hpp" )
 
 find_package(AdaptiveCpp CONFIG REQUIRED)
 
+#add_compile_options(-DUSE_SG_SIZE_64)
 add_library(ethash-sycl STATIC ${sources} ${headers})
 add_sycl_to_target(TARGET ethash-sycl SOURCES ${sources})
 target_link_libraries(ethash-sycl PUBLIC AdaptiveCpp::acpp-rt ethcore)
+target_link_options(ethash-sycl PUBLIC -fopenmp)
 include_directories(..)
 

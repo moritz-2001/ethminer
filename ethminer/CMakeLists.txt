@@ -118,6 +118,11 @@ if (ETHASHSYCL)
     endif()
 endif()
 
+if (USE_SG_SIZE_64)
+    message("USE SG SIZE 64")
+    add_compile_options(-DUSE_SG_SIZE_64)
+endif ()
+
 if(USE_AMD_BACKEND)
     message(STATUS "Using 64 thread shuffle function code path")
 else()
