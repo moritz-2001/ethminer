@@ -127,7 +127,7 @@ SYCLMiner::SYCLMiner(unsigned _index, SYSettings _settings, DeviceDescriptor & /
       m_settings(_settings),
       m_batch_size(_settings.gridSize * _settings.blockSize),
       m_streams_batch_size(_settings.gridSize * _settings.blockSize * _settings.streams),
-      m_DefaultQueue(sycl::queue())
+      m_DefaultQueue(sycl::queue(sycl::cpu_selector_v))
 
 {
     DisplayDeviceProperties(m_DefaultQueue.get_device());
