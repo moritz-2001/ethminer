@@ -851,13 +851,22 @@ static sycl::uint2 const Keccak_f1600_RC[24] = {
     {0x80000001, 0x00000000},
     {0x80008008, 0x80000000},
 };
+
+uint32_t rotl (uint32_t value, unsigned int count) {
+    return (value << count) | (value >> (64 - count));
+}
+
+uint64_t rotl (uint64_t value, unsigned int count) {
+    return (value << count) | (value >> (64 - count));
+}
+
 DEV_INLINE uint64_t as_ulong(sycl::uint2 x)
 {
-    using res_vec_type = sycl::vec<sycl::opencl::cl_ulong, 1>;
-    res_vec_type y     = x.as<res_vec_type>();
-    return y[0];
+    uint64_t result;
+    result = ((uint64_t)x.x()) | (((uint64_t)x.y()) << 32);
+    return result;
 }
-#define ROTL64_1(x, y) (sycl::rotate(as_ulong(x), (uint64_t)(y)))
+#define ROTL64_1(x, y) (rotl(as_ulong(x), (uint64_t)(y)))
 #define ROTL64_2(x, y) ROTL64_1(x, (y) + 32)
 
 #define KECCAKF_1600_RND(a, i, outsz)                                                                                  \
