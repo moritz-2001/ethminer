@@ -41,7 +41,7 @@ DEV_INLINE void keccak_f1600_init(
     sycl::uint2       *state,
     const sycl::uint2 *keccak_round_constants,
     hash32_t           d_header)
-{
+{//
     sycl::uint2       s[25];
     sycl::uint2       t[5], u, v;
     const sycl::uint2 u2zero = sycl::uint2(0, 0);
@@ -984,21 +984,3 @@ DEV_INLINE uint64_t as_ulong(sycl::uint2 x)
             KECCAKF_1600_RND(st, r, os);         \
         }                                        \
     } while (0);
-
-DEV_INLINE void SHA3_512_2(sycl::uint2 *s, const sycl::uint2 *keccak_round_constants)
-{
-    sycl::uint2 st[25];
-
-    for (uint i = 0; i < 8; ++i)
-        st[i] = s[i];
-
-    st[8] = {0x00000001, 0x80000000};
-
-    for (uint i = 9; i != 25; ++i)
-        st[i] = (sycl::uint2)(0);
-
-    KECCAK_PROCESS(st, 8, 8);
-
-    for (uint i = 0; i < 8; ++i)
-        s[i] = st[i];
-}
