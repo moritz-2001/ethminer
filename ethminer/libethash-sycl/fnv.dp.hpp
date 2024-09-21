@@ -28,7 +28,7 @@ DEV_INLINE sycl::uint4 fnv4_p(bool allow, const sycl::stream &out, sycl::uint4 a
 {
     sycl::uint4 c;
     if (allow) {
-       out << "fnv4 " << a << " " << b << "\n";
+       //out << "fnv4 " << a << " " << b << "\n";
     }
 
     c.x() = a.x() * FNV_PRIME ^ b.x();
