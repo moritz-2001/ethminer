@@ -117,7 +117,7 @@ void ethash_calculate_dag_item(uint32_t start, sycl::nd_item<1> item_ct1, uint32
             else if (item_ct1.get_sub_group().get_local_id() < 32)
                 shuffle_index = sycl::select_from_group(g, parent_index, t + 28); 
 
-#ifdef USE_AMD_BACKEND // Shuffle on AMD GPUs is done over 64 threads
+#ifdef USE_SG_SIZE_64 // Shuffle on AMD GPUs is done over 64 threads
             else if (item_ct1.get_sub_group().get_local_id() < 36)
                 shuffle_index = sycl::select_from_group(g, parent_index, t + 32);
             else if (item_ct1.get_sub_group().get_local_id() < 40)
@@ -157,7 +157,7 @@ void ethash_calculate_dag_item(uint32_t start, sycl::nd_item<1> item_ct1, uint32
                     w1 = w + 24;
                 else if (iSubGroupThreadId < 32)
                     w1 = w + 28;
-#ifdef USE_AMD_BACKEND
+#ifdef USE_SG_SIZE_64
                 else if (iSubGroupThreadId < 36)
                     w1 = w + 32;
                 else if (iSubGroupThreadId < 40)

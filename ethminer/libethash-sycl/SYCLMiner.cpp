@@ -140,7 +140,7 @@ SYCLMiner::SYCLMiner(unsigned _index, SYSettings _settings, DeviceDescriptor & /
         d_header               = sycl::malloc_device<hash32_t>   (1,  m_DefaultQueue);
         d_target               = sycl::malloc_device<uint64_t>   (1,  m_DefaultQueue);
         keccak_round_constants = sycl::malloc_device<sycl::uint2>(24, m_DefaultQueue); // There's 24 constants to store
-#ifdef USE_AMD_BACKEND
+#ifdef USE_SG_SIZE_64
         pdShuffleOffsets = sycl::malloc_device<int>(64, m_DefaultQueue);
 #else
         pdShuffleOffsets = sycl::malloc_device<int>(32, m_DefaultQueue);

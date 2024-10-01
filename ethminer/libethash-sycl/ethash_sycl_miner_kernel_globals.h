@@ -58,7 +58,7 @@ std::vector<int> const vShuffleOffsets({
     24,
     24,
     24,
-#ifdef USE_AMD_BACKEND
+#ifdef USE_SG_SIZE_64
     32,
     32,
     32,
